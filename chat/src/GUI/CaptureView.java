@@ -5,7 +5,8 @@
  */
 package GUI;
 
-import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -16,13 +17,6 @@ public class CaptureView extends javax.swing.JDialog {
     private String ipMachine;
     private int portMachine;
     private String clientName;
-    private Color clientColor;
-    
-    
-    Color blue = new Color(169, 195, 249);
-    Color red = new Color(255, 160, 160);
-    Color orange = new Color(255, 185, 107);
-    Color green = new Color(163, 255, 155);
 
     /**
      * Creates new form CaptureView
@@ -30,16 +24,16 @@ public class CaptureView extends javax.swing.JDialog {
     public CaptureView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        colorBox.addItem("blue"); colorBox.addItem("red");
-        colorBox.addItem("orange"); colorBox.addItem("green");
+        this.setTitle("Login");
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing (WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        setLocationRelativeTo(null);
     }
     
-    /**
-     * Get selected color
-     */
-    public Color GetColor() {
-        return clientColor;
-    }
     /**
      * Get introduced IP
      */
@@ -52,9 +46,38 @@ public class CaptureView extends javax.swing.JDialog {
     public int GetPort() {
         return portMachine;
     }
+    /**
+     * Get user's name
+     */
+    public String GetUsername() {
+        return clientName;
+    }
 
-
-
+    /**
+     * Set the title text of the window
+     */
+    public void SetTitleText(String text) {
+        titleText.setText(text);
+        this.repaint();
+    }
+    /**
+     * Enable/disable the field IP
+     * Server is not interested in entering an IP address
+     */
+    public void SetIpEnable(boolean ipStatus) {
+        ipField.setEnabled(ipStatus);
+        this.repaint();
+    }
+    /**
+     * Set fields
+     */
+    public void SetIpField(String ipAddress) {
+        ipField.setText(ipAddress);
+    }
+    public void SetPortField(int port) {
+        portField.setText(Integer.toString(port));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,7 +93,6 @@ public class CaptureView extends javax.swing.JDialog {
         portField = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         nameField = new javax.swing.JTextField();
-        colorBox = new javax.swing.JComboBox<>();
         loginButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -115,10 +137,10 @@ public class CaptureView extends javax.swing.JDialog {
 
         nameField.setText("Name");
 
-        colorBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        colorBox.addActionListener(new java.awt.event.ActionListener() {
+        loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorBoxActionPerformed(evt);
+                loginButtonActionPerformed(evt);
             }
         });
 
@@ -130,7 +152,7 @@ public class CaptureView extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(colorBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -139,16 +161,9 @@ public class CaptureView extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(colorBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(loginButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        loginButton.setText("Login");
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,9 +174,6 @@ public class CaptureView extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(titleText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -174,8 +186,6 @@ public class CaptureView extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(loginButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -186,24 +196,12 @@ public class CaptureView extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_ipFieldActionPerformed
 
-    private void colorBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_colorBoxActionPerformed
-
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         ipMachine = ipField.getText();
         portMachine = Integer.parseInt(portField.getText());
         clientName = nameField.getText();
         
-        if (colorBox.getSelectedItem() == "blue") {
-            clientColor = blue;
-        } else if (colorBox.getSelectedItem() == "red") {
-            clientColor = red;
-        } else if (colorBox.getSelectedItem() == "orange") {
-            clientColor = orange;
-        } else if (colorBox.getSelectedItem() == "green") {
-            clientColor = green;
-        }
+        this.dispose();
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
@@ -249,7 +247,6 @@ public class CaptureView extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> colorBox;
     private javax.swing.JTextField ipField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

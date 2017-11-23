@@ -1,7 +1,7 @@
 package chat;
 
 import GUI.CaptureView;
-import java.awt.Color;
+import GUI.ChatView;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 public class Client {
     // Properties
     private String clientName;
-    private Color clientColor;
     // Socket
     private Socket clientSocket ;
     // Streams
@@ -29,6 +28,15 @@ public class Client {
     private DataOutputStream outData;
     
     private boolean option = true;
+    private ChatView chatView;
+
+    public Client(ChatView chatView) {
+        this.chatView = chatView;
+    }
+    
+    public String getUsername() {
+        return clientName;
+    }
     
     public void SetConnection(String ip, int port) {
         try {
@@ -37,13 +45,15 @@ public class Client {
                 @Override
                 public void run() {
                     while (option) {
-                        ListenData();
+                        ListenData(chatView);
                     }
                 }
             });
             th1.start();
+            System.out.println("Successfully connected to " + ip + ":" + port);
         } catch (IOException ex) {
            System.err.println("ERROR: connection error");
+           System.exit(0);
         }
     }
     
@@ -58,11 +68,11 @@ public class Client {
         }
     }
     
-    public void ListenData() {
+    public void ListenData(ChatView chatView) {
         try {
             inputStream = clientSocket.getInputStream();
             inData = new DataInputStream(inputStream);
-            ChatView.addRemoteMessage(inData.readUTF());
+            chatView.AddRemoteMessage(inData.readUTF());
         } catch (IOException ex) {
             System.err.println("ERROR: error listening data");
         }
@@ -78,19 +88,29 @@ public class Client {
         }
     }
     
-    public void SetClientProperties(String name, Color color) {
+    public void SetClientProperties(String name) {
         clientName = name;
-        clientColor = color;
     }
     
     public static void main(String [] args) {
         ChatView chatView = new ChatView();
+        Client cli = new Client(chatView);
+        
         CaptureView captureView = new CaptureView(chatView, true);
-        String name = captureView.getName();
-        Color color = captureView.GetColor();
-        setClientProperties(name, color);
+        captureView.SetTitleText("Client login");
+        captureView.SetIpEnable(true);
+        captureView.setVisible(true);
+        
+        String cliName = captureView.GetUsername();
+        cli.SetClientProperties(cliName);
+        
         String ipMachine = captureView.GetIP();
         int portMachine = captureView.GetPort();
-        setConnection(ipMachine, portMachine);
+        cli.SetConnection(ipMachine, portMachine);
+        
+        chatView.SetClient(cli);
+        chatView.SetUsername(cliName);
+        
+        chatView.setVisible(true);
     }
 }
