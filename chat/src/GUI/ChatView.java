@@ -172,11 +172,11 @@ public class ChatView extends javax.swing.JFrame {
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         if(mode == 1) {
             client.CloseConnection();
-            System.exit(0);
         } else {
             server.CloseConnection();
-            System.exit(0);
         }
+        this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void messageFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageFieldActionPerformed
