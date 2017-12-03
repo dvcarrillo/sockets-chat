@@ -1,4 +1,4 @@
-# Simple Java chat with GUI
+# Simple client-server Java chat with GUI
 
 A simple chat programmed in Java and Swing, using sockets. There is a client and a server, which can
 send messages between them using a username. The server defines the IP and the port, and the
